@@ -3,6 +3,7 @@ import { Timer } from '@/components/Timer';
 import { QueryEvaluationForm } from '@/components/QueryEvaluationForm';
 import { TaskNavigation } from '@/components/TaskNavigation';
 import { WebSearchPanel } from '@/components/WebSearchPanel';
+import { GuidelinesModal } from '@/components/GuidelinesModal';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -137,6 +138,8 @@ const Annotation = () => {
             </div>
 
             <div className="flex items-center gap-4">
+              <GuidelinesModal />
+              
               <Button variant="outline" size="sm" className="gap-2">
                 <Search className="h-4 w-4" />
                 Web Search
