@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Timer } from '@/components/Timer';
 import { QueryEvaluationForm } from '@/components/QueryEvaluationForm';
 import { TaskNavigation } from '@/components/TaskNavigation';
+import { WebSearchPanel } from '@/components/WebSearchPanel';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -16,6 +17,7 @@ interface EvaluationResponse {
   is_time_sensitive?: boolean;
   is_trending?: boolean;
   has_harmful_intent?: boolean;
+  comments?: string;
 }
 
 interface TaskStatus {
@@ -156,8 +158,22 @@ const Annotation = () => {
       {/* Main Content */}
       <div className="container mx-auto px-4 py-6">
         <div className="grid grid-cols-12 gap-6">
-          {/* Left Sidebar - Navigation & Timer */}
-          <div className="col-span-12 lg:col-span-3 space-y-4">
+          {/* Left Side - Query & Questions */}
+          <div className="col-span-12 lg:col-span-8">
+            <QueryEvaluationForm
+              key={currentTask.id} // Force re-render on task change
+              task={currentTask}
+              onSubmit={handleSubmitEvaluation}
+              isSubmitting={isSubmitting}
+              existingResponse={currentStatus.response}
+            />
+          </div>
+
+          {/* Right Sidebar - Search & Stats */}
+          <div className="col-span-12 lg:col-span-4 space-y-4">
+            {/* Web Search Panel */}
+            <WebSearchPanel />
+            
             {/* Session Timer */}
             <Timer 
               isActive={isTimerActive} 
@@ -199,17 +215,6 @@ const Annotation = () => {
                 </div>
               </div>
             </Card>
-          </div>
-
-          {/* Main Content Area */}
-          <div className="col-span-12 lg:col-span-9">
-            <QueryEvaluationForm
-              key={currentTask.id} // Force re-render on task change
-              task={currentTask}
-              onSubmit={handleSubmitEvaluation}
-              isSubmitting={isSubmitting}
-              existingResponse={currentStatus.response}
-            />
           </div>
         </div>
       </div>

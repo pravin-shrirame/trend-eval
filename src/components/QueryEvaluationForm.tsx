@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
+import { Textarea } from '@/components/ui/textarea';
 import { MessageSquare, Calendar, Clock, TrendingUp, AlertTriangle, CheckCircle } from 'lucide-react';
 
 interface QueryTask {
@@ -22,6 +23,7 @@ interface EvaluationResponse {
   is_time_sensitive?: boolean;
   is_trending?: boolean;
   has_harmful_intent?: boolean;
+  comments?: string;
 }
 
 interface QueryEvaluationFormProps {
@@ -89,6 +91,7 @@ export const QueryEvaluationForm = ({
   existingResponse = {} 
 }: QueryEvaluationFormProps) => {
   const [responses, setResponses] = useState<EvaluationResponse>(existingResponse);
+  const [comments, setComments] = useState(existingResponse.comments || '');
 
   const handleResponseChange = (key: keyof EvaluationResponse, value: boolean) => {
     setResponses(prev => ({
@@ -98,7 +101,10 @@ export const QueryEvaluationForm = ({
   };
 
   const handleSubmit = () => {
-    onSubmit(responses);
+    onSubmit({
+      ...responses,
+      comments: comments.trim() || undefined
+    });
   };
 
   const isComplete = Object.keys(responses).length === evaluationQuestions.length;
@@ -216,6 +222,26 @@ export const QueryEvaluationForm = ({
           );
         })}
       </div>
+
+      {/* Comments Section */}
+      <Card className="p-6 bg-card border">
+        <div className="space-y-4">
+          <div className="flex items-center gap-2">
+            <MessageSquare className="h-5 w-5 text-primary" />
+            <h3 className="font-medium text-foreground">Comments</h3>
+            <span className="text-sm text-muted-foreground">(Optional)</span>
+          </div>
+          
+          <Separator />
+          
+          <Textarea
+            placeholder="Add any additional comments or observations about this query..."
+            value={comments}
+            onChange={(e) => setComments(e.target.value)}
+            className="min-h-[100px]"
+          />
+        </div>
+      </Card>
 
       {/* Submit Button */}
       <Card className="p-4 bg-card border">
